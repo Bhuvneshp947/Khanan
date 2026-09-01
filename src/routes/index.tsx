@@ -2,10 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowDown, ArrowRight, Check, Menu, Minus, Plus, Search, ShoppingBag, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/synova-hero.jpg";
-import headphonesImage from "@/assets/headphones.jpg";
-import watchImage from "@/assets/watch.jpg";
-import campaignImage from "@/assets/campaign.jpg";
+import heroAsset from "@/assets/synova-hero.jpg.asset.json";
+import headphonesAsset from "@/assets/headphones.jpg.asset.json";
+import watchAsset from "@/assets/watch.jpg.asset.json";
+import campaignAsset from "@/assets/campaign.jpg.asset.json";
+
+const heroImage = heroAsset.url;
+const headphonesImage = headphonesAsset.url;
+const watchImage = watchAsset.url;
+const campaignImage = campaignAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
