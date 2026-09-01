@@ -34,7 +34,7 @@ export function SiteHeader({ cartCount = 0, onCart }: { cartCount?: number; onCa
           <Button variant="ghost" size="icon" aria-label="Open menu" className="md:hidden" onClick={() => setMenuOpen(true)}><Menu /></Button>
           <Link to="/" className="display-type text-3xl">SYNOVA</Link>
           <nav aria-label="Main navigation" className="hidden items-center gap-9 text-[0.68rem] font-bold uppercase tracking-[0.18em] md:flex">
-            {links.map((link) => <Link key={link.label} to={link.to} hash={link.hash} activeProps={{ className: "opacity-50" }} className="transition-opacity hover:opacity-50">{link.label}</Link>)}
+            {links.map((link) => <Link key={link.label} to={link.to} {...(link.hash ? { hash: link.hash } : {})} activeProps={{ className: "opacity-50" }} className="transition-opacity hover:opacity-50">{link.label}</Link>)}
           </nav>
           {onCart ? (
             <Button variant="ghost" onClick={onCart} className="relative text-[0.65rem] font-bold uppercase tracking-[0.14em]">Bag {cartCount > 0 && <span>({cartCount})</span>}</Button>
@@ -44,7 +44,7 @@ export function SiteHeader({ cartCount = 0, onCart }: { cartCount?: number; onCa
       {menuOpen && (
         <div className="fixed inset-0 z-[90] bg-background p-4">
           <div className="flex items-center justify-between"><Link to="/" onClick={() => setMenuOpen(false)} className="display-type text-3xl">SYNOVA</Link><Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X /></Button></div>
-          <nav className="mt-20 flex flex-col">{links.map((link) => <Link key={link.label} to={link.to} hash={link.hash} onClick={() => setMenuOpen(false)} className="display-type border-t border-foreground/20 py-5 text-6xl last:border-b">{link.label}</Link>)}</nav>
+          <nav className="mt-20 flex flex-col">{links.map((link) => <Link key={link.label} to={link.to} {...(link.hash ? { hash: link.hash } : {})} onClick={() => setMenuOpen(false)} className="display-type border-t border-foreground/20 py-5 text-6xl last:border-b">{link.label}</Link>)}</nav>
         </div>
       )}
     </>
