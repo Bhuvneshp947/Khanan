@@ -91,7 +91,7 @@ function Index() {
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-transparent" />
           <div className="relative flex min-h-[calc(92svh-4rem)] flex-col justify-end px-4 pb-8 md:px-8 md:pb-12">
             <p data-hero-meta className="mb-5 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-foreground/70">Issue 01 · Objects for modern life</p>
-            <h1 className="display-type max-w-5xl overflow-hidden text-[clamp(5rem,15vw,13rem)]">
+            <h1 className="display-type max-w-5xl overflow-hidden text-[clamp(3.45rem,18vw,13rem)] md:text-[clamp(5rem,15vw,13rem)]">
               <span className="block overflow-hidden"><span data-hero-line className="block">No smoke.</span></span>
               <span className="block overflow-hidden"><span data-hero-line className="block">Just substance.</span></span>
             </h1>
@@ -119,7 +119,7 @@ function Index() {
                 <div className="relative aspect-[4/5] overflow-hidden bg-card">
                   <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover grayscale transition-transform duration-700 ease-out group-hover:scale-[1.035]" />
                   <span className="absolute left-3 top-3 bg-background px-2 py-1 text-[0.58rem] font-bold uppercase tracking-[0.16em]">0{index + 1}</span>
-                  <Button variant="inverted" size="icon" aria-label={`Add ${product.name} to cart`} onClick={addToCart} className="absolute bottom-3 right-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"><Plus /></Button>
+                  <Button variant="inverted" size="icon" aria-label={`Add ${product.name} to cart`} onClick={addToCart} className="absolute bottom-3 right-3 transition-all duration-300 md:translate-y-3 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
                 <div className="mt-4 flex items-start justify-between gap-4">
                   <div><h3 className="text-sm font-bold uppercase">{product.name}</h3><p className="mt-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">{product.category}</p></div>
