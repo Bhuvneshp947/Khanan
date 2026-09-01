@@ -96,8 +96,8 @@ function Index() {
               </h1>
               <p className="mt-7 max-w-md text-sm leading-7 text-muted-foreground">{active.text}</p>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Button variant="inverted" size="editorial" asChild><a href="#products">{active.cta} <ArrowRight /></a></Button>
-                <Button variant="outline" size="editorial" asChild><a href="#categories">Browse All</a></Button>
+                <Button variant="editorial" size="editorial" asChild><a href="#products">{active.cta} <ArrowRight /></a></Button>
+                <Button variant="editorialOutline" size="editorial" asChild><a href="#categories">Browse All</a></Button>
               </div>
               <div className="mt-10 flex gap-2">
                 {heroSlides.map((item, index) => (
@@ -135,7 +135,7 @@ function Index() {
                   <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.07]" />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   <span className="absolute left-3 top-3 rounded-full bg-background/85 px-3 py-1 text-[0.55rem] font-bold uppercase tracking-[0.16em] backdrop-blur">{product.category}</span>
-                  <Button variant="inverted" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
+                  <Button variant="editorial" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
                 <h3 className="mt-5 text-sm font-bold leading-6">{product.name}</h3>
                 <p className="mt-2 flex items-center gap-3 text-sm"><span>{product.price}</span><span className="text-xs text-muted-foreground line-through">{product.was}</span><span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
@@ -149,7 +149,7 @@ function Index() {
           <div className="absolute inset-0 bg-background/55" />
           <div className="section-shell relative flex h-full flex-col justify-between py-14">
             <p data-reveal className="text-[0.62rem] font-bold uppercase tracking-[0.22em]">Campaign 001 / Power, disclosed</p>
-            <div data-reveal><h2 className="display-type max-w-4xl text-[clamp(3.5rem,12vw,11rem)]">Charge different.</h2><Button variant="inverted" size="editorial" className="mt-8" asChild><a href="#categories">Shop by category <ArrowRight /></a></Button></div>
+            <div data-reveal><h2 className="display-type max-w-4xl text-[clamp(3.5rem,12vw,11rem)]">Charge different.</h2><Button variant="editorial" size="editorial" className="mt-8" asChild><a href="#categories">Shop by category <ArrowRight /></a></Button></div>
           </div>
         </section>
 
@@ -191,7 +191,7 @@ function Index() {
               <p className="mt-8 border-t border-foreground/20 pt-5 text-xs text-muted-foreground">Checkout becomes available once a store is connected.</p>
             </div>
           )}
-          <Button variant="inverted" size="editorial" disabled={cartCount === 0} className="w-full">Checkout <ArrowRight /></Button>
+          <Button variant="editorial" size="editorial" disabled={cartCount === 0} className="w-full">Checkout <ArrowRight /></Button>
         </div>
       </div>
       {cartOpen && <button aria-label="Close cart overlay" className="fixed inset-0 z-[75] cursor-default bg-background/70 backdrop-blur-sm" onClick={() => setCartOpen(false)} />}
