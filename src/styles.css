@@ -166,9 +166,29 @@
 @utility hairline-bottom { border-bottom: 1px solid var(--color-border); }
 
 @keyframes ticker { to { transform: translateX(-50%); } }
-@utility ticker-track { animation: ticker 28s linear infinite; }
+@utility ticker-track { animation: ticker 24s linear infinite; will-change: transform; }
+
+@utility section-shell {
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-shell { padding-inline: 2rem; }
+}
+
+@utility text-balance { text-wrap: balance; }
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.7; }
+}
+
+@utility soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .ticker-track { animation: none; }
+  .ticker-track, .soft-pulse { animation: none; }
 }
