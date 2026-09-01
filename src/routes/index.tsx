@@ -1,183 +1,200 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowRight, Check, Menu, Minus, Plus, Search, ShoppingBag, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowRight, Minus, Plus, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { PageFrame, ServiceTicker, SiteFooter, SiteHeader } from "@/components/storefront-layout";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import heroAsset from "@/assets/synova-hero.jpg.asset.json";
-import headphonesAsset from "@/assets/headphones.jpg.asset.json";
-import watchAsset from "@/assets/watch.jpg.asset.json";
+import powerHeroAsset from "@/assets/power-hero.jpg.asset.json";
 import campaignAsset from "@/assets/campaign.jpg.asset.json";
-
-const heroImage = heroAsset.url;
-const headphonesImage = headphonesAsset.url;
-const watchImage = watchAsset.url;
-const campaignImage = campaignAsset.url;
+import headphonesAsset from "@/assets/headphones.jpg.asset.json";
+import gr02Asset from "@/assets/gr02-holder.jpg.asset.json";
+import gemanAsset from "@/assets/geman-powerbank.jpg.asset.json";
+import hifastAsset from "@/assets/hifast-powerbank.jpg.asset.json";
+import jcell103Asset from "@/assets/jcell-103.jpg.asset.json";
+import jcell133Asset from "@/assets/jcell-133.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SYNOVA — Verified Objects for Modern Life" },
-      { name: "description", content: "Shop verified audio, watches and everyday objects with honest sourcing and fast delivery." },
-      { property: "og:title", content: "SYNOVA — Verified Objects for Modern Life" },
-      { property: "og:description", content: "Shop verified audio, watches and everyday objects with honest sourcing and fast delivery." },
+      { title: "SYNOVA — Power Banks, Chargers & Mobile Accessories" },
+      { name: "description", content: "Shop SYNOVA power banks, fast chargers, ear buds and mobile holders with disclosed authenticity and Cash on Delivery across Pakistan." },
+      { property: "og:title", content: "SYNOVA — Power Banks, Chargers & Mobile Accessories" },
+      { property: "og:description", content: "Shop SYNOVA power banks, fast chargers, ear buds and mobile holders with disclosed authenticity and Cash on Delivery across Pakistan." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: powerHeroAsset.url },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: powerHeroAsset.url },
     ],
   }),
   component: Index,
 });
 
+const heroSlides = [
+  {
+    tag: "GaN Fast Charging",
+    title: ["Maximum output.", "Zero thermal", "throttling."],
+    text: "Compact GaN fast chargers built with intelligent temperature control for laptops, tablets, and phones.",
+    cta: "Shop Fast Chargers",
+    image: powerHeroAsset.url,
+    alt: "Compact fast charger with braided cable on a dark surface",
+  },
+  {
+    tag: "Desk & Everyday Power",
+    title: ["Engineered for", "clean desks and", "heavy workloads."],
+    text: "Precision-built mounts and high-capacity power banks rated for daily travel and long shifts.",
+    cta: "Explore Desktop Gear",
+    image: heroAsset.url,
+    alt: "Editorial monochrome shot of premium mobile accessories",
+  },
+];
+
+const categories = ["All", "Chargers", "Power Bank", "Ear buds", "Mobile Holder"] as const;
+
 const products = [
-  { name: "Studio One", category: "Audio / Original", price: "Rs. 24,900", image: headphonesImage },
-  { name: "Field 01", category: "Time / Original", price: "Rs. 18,500", image: watchImage },
-  { name: "Night Form", category: "Outerwear / Edition", price: "Rs. 12,800", image: heroImage },
+  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", was: "Rs. 2,499", image: gr02Asset.url },
+  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", was: "Rs. 5,999", image: gemanAsset.url },
+  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", was: "Rs. 7,999", image: hifastAsset.url },
+  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", was: "Rs. 2,200", image: jcell103Asset.url },
+  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", was: "Rs. 2,700", image: jcell133Asset.url },
+];
+
+const categoryCards = [
+  { name: "Chargers", image: powerHeroAsset.url },
+  { name: "Power Bank", image: gemanAsset.url },
+  { name: "Ear buds", image: headphonesAsset.url },
+  { name: "Mobile Holder", image: gr02Asset.url },
 ];
 
 function Index() {
   const scope = useRef<HTMLDivElement>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [slide, setSlide] = useState(0);
+  const [filter, setFilter] = useState<(typeof categories)[number]>("All");
   const [cartOpen, setCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  useScrollReveal(scope);
 
   useEffect(() => {
-    if (!scope.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let cleanup = () => {};
-    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([gsapModule, triggerModule]) => {
-      const gsap = gsapModule.default;
-      const ScrollTrigger = triggerModule.ScrollTrigger;
-      gsap.registerPlugin(ScrollTrigger);
-      const context = gsap.context(() => {
-        gsap.from("[data-hero-line]", { yPercent: 115, duration: 1.05, stagger: 0.09, ease: "power4.out", delay: 0.15 });
-        gsap.from("[data-hero-meta]", { opacity: 0, y: 18, duration: 0.8, stagger: 0.08, delay: 0.7 });
-        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
-          gsap.from(element, { opacity: 0, y: 50, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: element, start: "top 88%" } });
-        });
-        gsap.to("[data-parallax-image]", { yPercent: 12, ease: "none", scrollTrigger: { trigger: "[data-campaign]", start: "top bottom", end: "bottom top", scrub: 0.7 } });
-        gsap.to("[data-story-word]", { xPercent: -18, ease: "none", scrollTrigger: { trigger: "[data-story]", start: "top bottom", end: "bottom top", scrub: 0.8 } });
-      }, scope);
-      cleanup = () => context.revert();
-    });
-    return () => cleanup();
+    const id = window.setInterval(() => setSlide((value) => (value + 1) % heroSlides.length), 6500);
+    return () => window.clearInterval(id);
   }, []);
 
-  const addToCart = () => {
-    setCartCount((value) => value + 1);
-    setCartOpen(true);
-  };
+  const visible = useMemo(() => (filter === "All" ? products : products.filter((product) => product.category === filter)), [filter]);
+  const active = heroSlides[slide]!;
 
   return (
-    <div ref={scope} className="min-h-screen bg-background text-foreground">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-foreground/15 bg-background/75 backdrop-blur-xl">
-        <div className="flex h-16 items-center justify-between px-4 md:px-8">
-          <Button variant="ghost" size="icon" aria-label="Open menu" className="md:hidden" onClick={() => setMenuOpen(true)}><Menu /></Button>
-          <a href="#top" className="display-type text-3xl">SYNOVA</a>
-          <nav aria-label="Main navigation" className="hidden items-center gap-8 text-[0.68rem] font-bold uppercase tracking-[0.18em] md:flex">
-            <a className="transition-opacity hover:opacity-50" href="#shop">New arrivals</a>
-            <a className="transition-opacity hover:opacity-50" href="#categories">Objects</a>
-            <a className="transition-opacity hover:opacity-50" href="#story">Transparency</a>
-          </nav>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" aria-label="Search"><Search /></Button>
-            <Button variant="ghost" size="icon" aria-label={`Cart with ${cartCount} items`} onClick={() => setCartOpen(true)} className="relative">
-              <ShoppingBag />{cartCount > 0 && <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-full bg-foreground text-[0.55rem] text-background">{cartCount}</span>}
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main id="top">
-        <section className="relative min-h-[92svh] overflow-hidden pt-16">
-          <img src={heroImage} alt="SYNOVA model wearing black technical outerwear and headphones" width={1536} height={1024} className="absolute inset-0 size-full object-cover object-[65%_center] opacity-70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/55 to-transparent" />
-          <div className="relative flex min-h-[calc(92svh-4rem)] flex-col justify-end px-4 pb-8 md:px-8 md:pb-12">
-            <p data-hero-meta className="mb-5 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-foreground/70">Issue 01 · Objects for modern life</p>
-            <h1 className="display-type max-w-5xl overflow-hidden text-[clamp(3.45rem,18vw,13rem)] md:text-[clamp(5rem,15vw,13rem)]">
-              <span className="block overflow-hidden"><span data-hero-line className="block">No smoke.</span></span>
-              <span className="block overflow-hidden"><span data-hero-line className="block">Just substance.</span></span>
-            </h1>
-            <div data-hero-meta className="mt-7 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-              <p className="max-w-md text-sm leading-6 text-foreground/70">Original or master copy—we label everything exactly as it is. Considered objects, verified sourcing, zero theatre.</p>
-              <Button variant="inverted" size="editorial" asChild><a href="#shop">Explore the drop <ArrowDown /></a></Button>
+    <PageFrame>
+      <SiteHeader cartCount={cartCount} onCart={() => setCartOpen(true)} />
+      <main ref={scope}>
+        <section className="relative overflow-hidden pt-24 md:pt-28">
+          <div className="pointer-events-none absolute -left-40 top-10 size-[36rem] rounded-full bg-foreground/[0.07] blur-3xl" />
+          <div className="section-shell grid items-center gap-10 pb-16 md:grid-cols-2 md:gap-14 md:pb-24">
+            <div key={slide} className="animate-fade-in">
+              <span className="inline-block rounded-full border border-foreground/25 px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em]">{active.tag}</span>
+              <h1 className="display-type mt-7 text-[clamp(3rem,11vw,7rem)]">
+                {active.title.map((line, index) => <span key={line} className="block overflow-hidden"><span data-page-title className="block" style={{ animationDelay: `${index * 60}ms` }}>{line}</span></span>)}
+              </h1>
+              <p className="mt-7 max-w-md text-sm leading-7 text-muted-foreground">{active.text}</p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Button variant="inverted" size="editorial" asChild><a href="#products">{active.cta} <ArrowRight /></a></Button>
+                <Button variant="outline" size="editorial" asChild><a href="#categories">Browse All</a></Button>
+              </div>
+              <div className="mt-10 flex gap-2">
+                {heroSlides.map((item, index) => (
+                  <button key={item.tag} type="button" aria-label={`Show ${item.tag}`} onClick={() => setSlide(index)} className={`h-[3px] w-12 transition-all duration-500 ${index === slide ? "bg-foreground" : "bg-foreground/25 hover:bg-foreground/60"}`} />
+                ))}
+              </div>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-foreground/15">
+              <img data-parallax src={active.image} alt={active.alt} width={1280} height={960} className="h-[320px] w-full scale-110 object-cover transition-transform duration-1000 md:h-[520px]" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background/50 via-transparent to-transparent" />
             </div>
           </div>
+          <div className="section-shell flex items-center gap-3 pb-10 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted-foreground"><ArrowDown className="soft-pulse size-4" /> Scroll to explore</div>
         </section>
 
-        <div className="overflow-hidden border-y border-foreground/20 py-3">
-          <div className="ticker-track flex w-max whitespace-nowrap text-xs font-bold uppercase tracking-[0.22em]">
-            {[0, 1].map((group) => <div key={group} className="flex">{["Verified authenticity", "Fast Peshawar delivery", "Pay when you receive", "No hidden claims"].map((item) => <span key={`${group}-${item}`} className="flex items-center gap-8 px-8">{item}<span aria-hidden="true">✦</span></span>)}</div>)}
-          </div>
-        </div>
+        <ServiceTicker />
 
-        <section id="shop" className="px-4 py-20 md:px-8 md:py-28">
-          <div data-reveal className="mb-10 flex items-end justify-between border-b border-foreground/20 pb-5">
-            <div><p className="mb-3 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">Freshly verified</p><h2 className="display-type text-6xl md:text-8xl">New objects</h2></div>
-            <span className="hidden text-xs uppercase tracking-[0.18em] md:block">01—03 / Selected</span>
+        <section id="products" className="section-shell py-20 md:py-28">
+          <div data-reveal className="flex flex-wrap items-end justify-between gap-6 border-b border-foreground/20 pb-6">
+            <div>
+              <p className="mb-3 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted-foreground">All Products</p>
+              <h2 className="display-type text-6xl md:text-8xl">The full lineup</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button key={category} type="button" onClick={() => setFilter(category)} className={`rounded-full border px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] transition-all duration-300 ${filter === category ? "border-foreground bg-foreground text-background" : "border-foreground/25 hover:border-foreground hover:-translate-y-0.5"}`}>{category}</button>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-x-3 gap-y-14 md:grid-cols-3">
-            {products.map((product, index) => (
-              <article data-reveal key={product.name} className="group">
-                <div className="relative aspect-[4/5] overflow-hidden bg-card">
-                  <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover grayscale transition-transform duration-700 ease-out group-hover:scale-[1.035]" />
-                  <span className="absolute left-3 top-3 bg-background px-2 py-1 text-[0.58rem] font-bold uppercase tracking-[0.16em]">0{index + 1}</span>
-                  <Button variant="inverted" size="icon" aria-label={`Add ${product.name} to cart`} onClick={addToCart} className="absolute bottom-3 right-3 transition-all duration-300 md:translate-y-3 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
+
+          <div data-stagger className="mt-12 grid gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {visible.map((product, index) => (
+              <article key={product.name} className="group">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-card">
+                  <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.07]" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <span className="absolute left-3 top-3 rounded-full bg-background/85 px-3 py-1 text-[0.55rem] font-bold uppercase tracking-[0.16em] backdrop-blur">{product.category}</span>
+                  <Button variant="inverted" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
-                <div className="mt-4 flex items-start justify-between gap-4">
-                  <div><h3 className="text-sm font-bold uppercase">{product.name}</h3><p className="mt-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">{product.category}</p></div>
-                  <p className="text-sm">{product.price}</p>
-                </div>
+                <h3 className="mt-5 text-sm font-bold leading-6">{product.name}</h3>
+                <p className="mt-2 flex items-center gap-3 text-sm"><span>{product.price}</span><span className="text-xs text-muted-foreground line-through">{product.was}</span><span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
               </article>
             ))}
           </div>
         </section>
 
-        <section data-campaign className="relative h-[90svh] min-h-[620px] overflow-hidden">
-          <img data-parallax-image src={campaignImage} alt="SYNOVA night campaign featuring two men in black streetwear" width={1536} height={1024} loading="lazy" className="absolute -inset-y-[12%] left-0 h-[124%] w-full object-cover grayscale" />
-          <div className="absolute inset-0 bg-background/35" />
-          <div className="relative flex h-full flex-col justify-between p-4 py-10 md:p-8 md:py-14">
-            <p data-reveal className="text-[0.65rem] font-bold uppercase tracking-[0.22em]">Campaign 001 / After dark</p>
-            <div data-reveal><h2 className="display-type max-w-5xl text-[clamp(4.5rem,13vw,12rem)]">Move different.</h2><Button variant="inverted" size="editorial" className="mt-7" asChild><a href="#categories">See the edit <ArrowRight /></a></Button></div>
+        <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
+          <img data-parallax src={campaignAsset.url} alt="SYNOVA night campaign" width={1536} height={1024} loading="lazy" className="absolute -inset-y-[10%] h-[120%] w-full object-cover grayscale" />
+          <div className="absolute inset-0 bg-background/55" />
+          <div className="section-shell relative flex h-full flex-col justify-between py-14">
+            <p data-reveal className="text-[0.62rem] font-bold uppercase tracking-[0.22em]">Campaign 001 / Power, disclosed</p>
+            <div data-reveal><h2 className="display-type max-w-4xl text-[clamp(3.5rem,12vw,11rem)]">Charge different.</h2><Button variant="inverted" size="editorial" className="mt-8" asChild><a href="#categories">Shop by category <ArrowRight /></a></Button></div>
           </div>
         </section>
 
-        <section id="categories" className="bg-paper px-4 py-20 text-ink md:px-8 md:py-28">
-          <p data-reveal className="mb-10 text-[0.65rem] font-bold uppercase tracking-[0.22em] opacity-60">Browse by instinct</p>
-          {["Sound", "Time", "Carry", "Wear"].map((category, index) => (
-            <a data-reveal key={category} href="#shop" className="group flex items-center justify-between border-t border-ink/25 py-4 last:border-b md:py-6">
-              <span className="display-type text-6xl transition-transform duration-300 group-hover:translate-x-3 md:text-9xl">{category}</span>
-              <span className="flex items-center gap-3 text-[0.62rem] font-bold uppercase tracking-[0.18em]"><span>0{index + 1}</span><ArrowRight className="transition-transform group-hover:translate-x-2" /></span>
-            </a>
-          ))}
-        </section>
-
-        <section id="story" data-story className="overflow-hidden px-4 py-24 md:px-8 md:py-36">
-          <div data-story-word className="display-type w-max whitespace-nowrap text-[clamp(7rem,22vw,20rem)] text-foreground/10">Radical transparency — Radical transparency —</div>
-          <div className="relative -mt-8 grid gap-12 md:-mt-20 md:grid-cols-2">
-            <h2 data-reveal className="display-type text-6xl md:text-9xl">The label is the promise.</h2>
-            <div data-reveal className="max-w-lg md:pt-12"><p className="text-xl leading-8">We do not blur the line between original and reproduction. Every object is inspected, described and priced for what it actually is.</p><div className="mt-10 grid grid-cols-2 gap-6 border-t border-foreground/20 pt-5 text-[0.65rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Local delivery</span><span>04 / Direct support</span></div></div>
+        <section id="categories" className="section-shell py-20 md:py-28">
+          <p data-reveal className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted-foreground">Shop by Category</p>
+          <h2 data-reveal className="display-type mt-5 text-6xl md:text-8xl">Find your gear</h2>
+          <div data-stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {categoryCards.map((category) => (
+              <button key={category.name} type="button" onClick={() => { setFilter(category.name as (typeof categories)[number]); document.getElementById("products")?.scrollIntoView({ behavior: "smooth" }); }} className="group relative aspect-[3/4] overflow-hidden rounded-xl border border-foreground/15 text-left">
+                <img src={category.image} alt={category.name} width={800} height={1000} loading="lazy" className="size-full object-cover grayscale transition-all duration-[900ms] group-hover:scale-110 group-hover:grayscale-0" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent" />
+                <div className="absolute inset-x-5 bottom-5">
+                  <h3 className="display-type text-4xl">{category.name}</h3>
+                  <span className="mt-2 flex items-center gap-2 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-muted-foreground transition-all duration-300 group-hover:gap-4 group-hover:text-foreground">Shop now <ArrowRight className="size-3" /></span>
+                </div>
+              </button>
+            ))}
           </div>
         </section>
 
-        <section className="border-y border-foreground/20 px-4 py-20 md:px-8 md:py-28">
-          <div data-reveal className="mx-auto max-w-5xl text-center"><p className="mb-8 text-5xl">“</p><blockquote className="display-type text-5xl leading-none md:text-8xl">Finally, a store that tells you exactly what you’re buying.</blockquote><p className="mt-8 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">Hamza K. · Verified buyer · Peshawar</p></div>
-        </section>
-
-        <section className="grid bg-paper text-ink md:grid-cols-2">
-          <div className="border-b border-ink/20 p-6 py-16 md:border-b-0 md:border-r md:p-12 md:py-24"><p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.2em] opacity-60">The dispatch</p><h2 className="display-type text-6xl md:text-8xl">Less noise.<br />Better objects.</h2></div>
-          <div className="flex flex-col justify-end p-6 py-16 md:p-12 md:py-24"><p className="mb-8 max-w-md text-sm leading-6 opacity-70">Occasional new arrivals, sourcing notes and useful recommendations. No inbox clutter.</p>{submitted ? <p className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.16em]"><Check /> You’re on the list.</p> : <form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }} className="flex border-b border-ink"><input required type="email" aria-label="Email address" placeholder="EMAIL ADDRESS" className="min-w-0 flex-1 bg-transparent py-4 text-xs font-bold tracking-[0.16em] outline-none placeholder:text-ink/50" /><Button type="submit" variant="ghost" size="icon" aria-label="Join newsletter"><ArrowRight /></Button></form>}</div>
+        <section className="overflow-hidden border-y border-foreground/20 py-20 md:py-28">
+          <div className="display-type w-max whitespace-nowrap text-[clamp(6rem,20vw,18rem)] text-foreground/10">Radical transparency — Radical transparency —</div>
+          <div className="section-shell relative -mt-6 grid gap-10 md:-mt-14 md:grid-cols-2">
+            <h2 data-reveal className="display-type text-6xl md:text-8xl">The label is the promise.</h2>
+            <div data-reveal className="md:pt-10"><p className="text-lg leading-8 text-muted-foreground">Original or master copy — every listing states exactly what you receive, with clear specs and honest pricing.</p><div className="mt-9 grid grid-cols-2 gap-5 border-t border-foreground/20 pt-6 text-[0.62rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Nationwide delivery</span><span>04 / WhatsApp support</span></div></div>
+          </div>
         </section>
       </main>
-
-      <footer className="px-4 pb-6 pt-16 md:px-8"><div className="grid gap-10 border-b border-foreground/20 pb-12 md:grid-cols-3"><div><p className="display-type text-5xl">SYNOVA</p><p className="mt-3 text-xs text-muted-foreground">Peshawar, Pakistan</p></div><div className="grid grid-cols-2 gap-6 text-xs uppercase leading-7"><div><a href="#shop" className="block hover:opacity-50">Shop</a><a href="#story" className="block hover:opacity-50">About</a></div><div><a href="mailto:hello@synova.store" className="block hover:opacity-50">Contact</a><a href="#top" className="block hover:opacity-50">Instagram</a></div></div><p className="max-w-xs text-xs leading-5 text-muted-foreground md:justify-self-end">Original or master copy. Clearly labelled, carefully checked, delivered with confidence.</p></div><div className="flex justify-between pt-5 text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground"><span>© 2026 SYNOVA</span><span>Objects with nothing to hide</span></div></footer>
-
-      {menuOpen && <div className="fixed inset-0 z-[70] bg-background p-4"><div className="flex items-center justify-between"><span className="display-type text-3xl">SYNOVA</span><Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X /></Button></div><nav className="mt-20 flex flex-col">{[["New arrivals", "#shop"], ["Objects", "#categories"], ["Transparency", "#story"]].map(([label, href]) => <a key={label} href={href} onClick={() => setMenuOpen(false)} className="display-type border-t border-foreground/20 py-5 text-6xl last:border-b">{label}</a>)}</nav></div>}
+      <SiteFooter />
 
       <div className={`fixed inset-y-0 right-0 z-[80] w-full max-w-md border-l border-foreground/20 bg-background p-5 transition-transform duration-500 ${cartOpen ? "translate-x-0" : "translate-x-full"}`} aria-hidden={!cartOpen}>
-        <div className="flex items-center justify-between border-b border-foreground/20 pb-5"><h2 className="text-xs font-bold uppercase tracking-[0.2em]">Your selection ({cartCount})</h2><Button variant="ghost" size="icon" aria-label="Close cart" onClick={() => setCartOpen(false)}><X /></Button></div>
-        <div className="flex h-[calc(100%-5rem)] flex-col justify-between py-8">{cartCount === 0 ? <div><p className="display-type text-6xl">Your bag is quiet.</p><p className="mt-4 text-sm text-muted-foreground">Add something worth carrying.</p></div> : <div><div className="flex gap-4"><img src={headphonesImage} alt="Studio One headphones" className="h-28 w-24 object-cover" /><div className="flex flex-1 justify-between"><div><p className="text-sm font-bold uppercase">Studio One</p><p className="mt-1 text-xs text-muted-foreground">Black / Original</p><div className="mt-5 flex items-center gap-3"><Button variant="ghost" size="icon" onClick={() => setCartCount((value) => Math.max(0, value - 1))} aria-label="Remove one"><Minus /></Button><span className="text-sm">{cartCount}</span><Button variant="ghost" size="icon" onClick={() => setCartCount((value) => value + 1)} aria-label="Add one"><Plus /></Button></div></div><p className="text-sm">Rs. 24,900</p></div></div><div className="mt-8 border-t border-foreground/20 pt-5 text-xs uppercase tracking-[0.12em]"><div className="flex justify-between"><span>Delivery</span><span>Free</span></div><p className="mt-4 text-muted-foreground">Checkout becomes available when Shopify is connected.</p></div></div>}
+        <div className="flex items-center justify-between border-b border-foreground/20 pb-5"><h2 className="text-xs font-bold uppercase tracking-[0.2em]">Your bag ({cartCount})</h2><Button variant="ghost" size="icon" aria-label="Close cart" onClick={() => setCartOpen(false)}><X /></Button></div>
+        <div className="flex h-[calc(100%-5rem)] flex-col justify-between py-8">
+          {cartCount === 0 ? (
+            <div><p className="display-type text-5xl">Your bag is quiet.</p><p className="mt-4 text-sm text-muted-foreground">Add something worth carrying.</p></div>
+          ) : (
+            <div>
+              <div className="flex gap-4"><img src={gemanAsset.url} alt="Geman GP-37 power bank" className="h-28 w-24 rounded-md object-cover" /><div className="flex flex-1 justify-between"><div><p className="text-sm font-bold">Selected items</p><p className="mt-1 text-xs text-muted-foreground">Cash on Delivery available</p><div className="mt-5 flex items-center gap-3"><Button variant="ghost" size="icon" aria-label="Remove one" onClick={() => setCartCount((value) => Math.max(0, value - 1))}><Minus /></Button><span className="text-sm">{cartCount}</span><Button variant="ghost" size="icon" aria-label="Add one" onClick={() => setCartCount((value) => value + 1)}><Plus /></Button></div></div></div></div>
+              <p className="mt-8 border-t border-foreground/20 pt-5 text-xs text-muted-foreground">Checkout becomes available once a store is connected.</p>
+            </div>
+          )}
           <Button variant="inverted" size="editorial" disabled={cartCount === 0} className="w-full">Checkout <ArrowRight /></Button>
         </div>
       </div>
       {cartOpen && <button aria-label="Close cart overlay" className="fixed inset-0 z-[75] cursor-default bg-background/70 backdrop-blur-sm" onClick={() => setCartOpen(false)} />}
-    </div>
+    </PageFrame>
   );
 }
