@@ -33,9 +33,22 @@ export function useScrollReveal(scope: RefObject<HTMLElement | null>) {
         });
         gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((image) => {
           gsap.to(image, {
-            yPercent: 10,
+            yPercent: 12,
+            scale: 1.16,
             ease: "none",
             scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: 0.7 },
+          });
+        });
+        gsap.utils.toArray<HTMLElement>("section").forEach((section) => {
+          const headings = section.querySelectorAll("h2, h3");
+          if (!headings.length) return;
+          gsap.from(headings, {
+            opacity: 0,
+            yPercent: 24,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: { trigger: section, start: "top 82%", once: true },
           });
         });
       }, scope);

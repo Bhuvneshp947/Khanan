@@ -13,6 +13,10 @@ import gemanAsset from "@/assets/geman-powerbank.jpg.asset.json";
 import hifastAsset from "@/assets/hifast-powerbank.jpg.asset.json";
 import jcell103Asset from "@/assets/jcell-103.jpg.asset.json";
 import jcell133Asset from "@/assets/jcell-133.jpg.asset.json";
+import portronicsAdaptoImage from "@/assets/portronics-adapto-66.jpg";
+import samsungChargerImage from "@/assets/samsung-40w-charger.jpg";
+import noiseBudsImage from "@/assets/noise-buds-x2.jpg";
+import portronicsBudsImage from "@/assets/portronics-twins-32.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,16 +51,28 @@ const heroSlides = [
     image: heroAsset.url,
     alt: "Editorial monochrome shot of premium mobile accessories",
   },
+  {
+    tag: "Wireless, uninterrupted",
+    title: ["Clear calls.", "Deep sound.", "All day power."],
+    text: "Smart wireless earbuds with clear microphones, quick charging, and a fit designed for every part of your day.",
+    cta: "Shop Ear Buds",
+    image: noiseBudsImage,
+    alt: "Black true wireless earbuds floating above their charging case",
+  },
 ];
 
 const categories = ["All", "Chargers", "Power Bank", "Ear buds", "Mobile Holder"] as const;
 
 const products = [
-  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", was: "Rs. 2,499", image: gr02Asset.url },
-  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", was: "Rs. 5,999", image: gemanAsset.url },
-  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", was: "Rs. 7,999", image: hifastAsset.url },
-  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", was: "Rs. 2,200", image: jcell103Asset.url },
-  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", was: "Rs. 2,700", image: jcell133Asset.url },
+  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", was: "Rs. 2,499", image: gr02Asset.url, details: "Secure dashboard and air-vent mounting with quick one-hand adjustment." },
+  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", was: "Rs. 5,999", image: gemanAsset.url, details: "High-capacity portable power with 22.5W fast charging for long days." },
+  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", was: "Rs. 7,999", image: hifastAsset.url, details: "Ultra-capacity backup power with up to 66.5W fast charging." },
+  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", was: "Rs. 2,200", image: jcell103Asset.url, details: "Compact everyday backup power in a travel-ready form." },
+  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", was: "Rs. 2,700", image: jcell133Asset.url, details: "A compact 10,000mAh charging system for dependable daily use." },
+  { name: "Portronics Adapto 66 (2.4A Dual USB Wall Charger)", category: "Chargers", price: "₹299.00", image: portronicsAdaptoImage, brand: "Portronics", details: "Dual USB ports charge two standard devices at once; includes a 1M micro-USB cable." },
+  { name: "Samsung 40W Type A & Type C 2-Port Fast Charger", category: "Chargers", price: "Contact for price", image: samsungChargerImage, brand: "Samsung", details: "Dual fast charging up to 25W on Type-C and 15W on Type-A, with built-in safety protection." },
+  { name: "Noise Buds X2 Truly Wireless Bluetooth Earbuds", category: "Ear buds", price: "₹1,799", image: noiseBudsImage, brand: "Noise", details: "Long battery life, quad microphones for clear calls, and fast charging." },
+  { name: "Portronics Harmonics Twins 32 In-Ear TWS Smart Earbuds with HD Mic", category: "Ear buds", price: "₹772", image: portronicsBudsImage, brand: "Portronics", details: "Bluetooth 5.4, touch controls, HD microphone, and water resistance." },
 ];
 
 const categoryCards = [
@@ -87,12 +103,11 @@ function Index() {
       <SiteHeader cartCount={cartCount} onCart={() => setCartOpen(true)} />
       <main ref={scope}>
         <section className="relative overflow-hidden pt-24 md:pt-28">
-          <div className="pointer-events-none absolute -left-40 top-10 size-[36rem] rounded-full bg-foreground/[0.07] blur-3xl" />
           <div className="section-shell grid items-center gap-10 pb-16 md:grid-cols-2 md:gap-14 md:pb-24">
-            <div key={slide} className="animate-fade-in">
+            <div key={`copy-${slide}`} className="hero-copy-enter">
               <span className="inline-block rounded-full border border-foreground/25 px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em]">{active.tag}</span>
               <h1 className="display-type mt-7 text-[clamp(3rem,11vw,7rem)]">
-                {active.title.map((line, index) => <span key={line} className="block overflow-hidden"><span data-page-title className="block" style={{ animationDelay: `${index * 60}ms` }}>{line}</span></span>)}
+                {active.title.map((line) => <span key={line} className="block overflow-hidden"><span data-page-title className="block">{line}</span></span>)}
               </h1>
               <p className="mt-7 max-w-md text-sm leading-7 text-muted-foreground">{active.text}</p>
               <div className="mt-9 flex flex-wrap gap-3">
@@ -105,8 +120,8 @@ function Index() {
                 ))}
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl border border-foreground/15">
-              <img data-parallax src={active.image} alt={active.alt} width={1280} height={960} className="h-[320px] w-full scale-110 object-cover transition-transform duration-1000 md:h-[520px]" />
+            <div key={`media-${slide}`} className="hero-media-enter relative overflow-hidden rounded-2xl border border-foreground/15">
+              <img data-parallax src={active.image} alt={active.alt} width={1280} height={960} className="h-[320px] w-full scale-110 object-cover md:h-[520px]" />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background/50 via-transparent to-transparent" />
             </div>
           </div>
@@ -137,8 +152,10 @@ function Index() {
                   <span className="absolute left-3 top-3 rounded-full bg-background/85 px-3 py-1 text-[0.55rem] font-bold uppercase tracking-[0.16em] backdrop-blur">{product.category}</span>
                   <Button variant="editorial" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
-                <h3 className="mt-5 text-sm font-bold leading-6">{product.name}</h3>
-                <p className="mt-2 flex items-center gap-3 text-sm"><span>{product.price}</span><span className="text-xs text-muted-foreground line-through">{product.was}</span><span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
+                {product.brand && <p className="mt-5 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-muted-foreground">{product.brand}</p>}
+                <h3 className={`${product.brand ? "mt-2" : "mt-5"} text-sm font-bold leading-6`}>{product.name}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{product.details}</p>
+                <p className="mt-3 flex flex-wrap items-center gap-3 text-sm"><span>{product.price}</span>{product.was && <span className="text-xs text-muted-foreground line-through">{product.was}</span>}<span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
               </article>
             ))}
           </div>
@@ -171,7 +188,9 @@ function Index() {
         </section>
 
         <section className="overflow-hidden border-y border-foreground/20 py-20 md:py-28">
-          <div className="display-type w-max whitespace-nowrap text-[clamp(6rem,20vw,18rem)] text-foreground/10">Radical transparency — Radical transparency —</div>
+          <div className="ticker-track flex w-max whitespace-nowrap text-[clamp(6rem,20vw,18rem)] text-foreground/10" aria-hidden="true">
+            {[0, 1].map((group) => <span key={group} className="display-type shrink-0">Radical transparency — Radical transparency — </span>)}
+          </div>
           <div className="section-shell relative -mt-6 grid gap-10 md:-mt-14 md:grid-cols-2">
             <h2 data-reveal className="display-type text-6xl md:text-8xl">The label is the promise.</h2>
             <div data-reveal className="md:pt-10"><p className="text-lg leading-8 text-muted-foreground">Original or master copy — every listing states exactly what you receive, with clear specs and honest pricing.</p><div className="mt-9 grid grid-cols-2 gap-5 border-t border-foreground/20 pt-6 text-[0.62rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Nationwide delivery</span><span>04 / WhatsApp support</span></div></div>
