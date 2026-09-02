@@ -52,6 +52,7 @@ const heroSlides = [
 const categories = ["All", "Chargers", "Power Bank", "Ear buds", "Mobile Holder"] as const;
 
 const products = [
+  { name: "Portronics Adapto 66 (2.4A Dual USB Wall Charger)", category: "Chargers", price: "₹299.00", was: undefined, image: powerHeroAsset.url },
   { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", was: "Rs. 2,499", image: gr02Asset.url },
   { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", was: "Rs. 5,999", image: gemanAsset.url },
   { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", was: "Rs. 7,999", image: hifastAsset.url },
@@ -89,7 +90,7 @@ function Index() {
         <section className="relative overflow-hidden pt-24 md:pt-28">
           <div className="pointer-events-none absolute -left-40 top-10 size-[36rem] rounded-full bg-foreground/[0.07] blur-3xl" />
           <div className="section-shell grid items-center gap-10 pb-16 md:grid-cols-2 md:gap-14 md:pb-24">
-            <div key={slide} className="animate-fade-in">
+            <div key={`copy-${slide}`} className="hero-copy-enter">
               <span className="inline-block rounded-full border border-foreground/25 px-4 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em]">{active.tag}</span>
               <h1 className="display-type mt-7 text-[clamp(3rem,11vw,7rem)]">
                 {active.title.map((line, index) => <span key={line} className="block overflow-hidden"><span data-page-title className="block" style={{ animationDelay: `${index * 60}ms` }}>{line}</span></span>)}
@@ -101,12 +102,12 @@ function Index() {
               </div>
               <div className="mt-10 flex gap-2">
                 {heroSlides.map((item, index) => (
-                  <button key={item.tag} type="button" aria-label={`Show ${item.tag}`} onClick={() => setSlide(index)} className={`h-[3px] w-12 transition-all duration-500 ${index === slide ? "bg-foreground" : "bg-foreground/25 hover:bg-foreground/60"}`} />
+                  <button key={item.tag} type="button" aria-label={`Show ${item.tag}`} onClick={() => setSlide(index)} className={`h-[3px] w-12 overflow-hidden bg-foreground/25 transition-all duration-500 after:block after:h-full after:origin-left after:bg-foreground ${index === slide ? "after:animate-[hero-progress_6.5s_linear_forwards]" : "hover:bg-foreground/60"}`} />
                 ))}
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl border border-foreground/15">
-              <img data-parallax src={active.image} alt={active.alt} width={1280} height={960} className="h-[320px] w-full scale-110 object-cover transition-transform duration-1000 md:h-[520px]" />
+            <div key={`visual-${slide}`} className="hero-visual-enter relative overflow-hidden rounded-2xl border border-foreground/15">
+              <img data-parallax src={active.image} alt={active.alt} width={1280} height={960} className="h-[320px] w-full scale-110 object-cover md:h-[520px]" />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background/50 via-transparent to-transparent" />
             </div>
           </div>
@@ -138,13 +139,13 @@ function Index() {
                   <Button variant="editorial" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
                 <h3 className="mt-5 text-sm font-bold leading-6">{product.name}</h3>
-                <p className="mt-2 flex items-center gap-3 text-sm"><span>{product.price}</span><span className="text-xs text-muted-foreground line-through">{product.was}</span><span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
+                 <p className="mt-2 flex items-center gap-3 text-sm"><span>{product.price}</span>{product.was && <span className="text-xs text-muted-foreground line-through">{product.was}</span>}<span className="text-[0.55rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">0{index + 1}</span></p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
+        <section data-campaign className="relative h-[80svh] min-h-[520px] overflow-hidden">
           <img data-parallax src={campaignAsset.url} alt="SYNOVA night campaign" width={1536} height={1024} loading="lazy" className="absolute -inset-y-[10%] h-[120%] w-full object-cover grayscale" />
           <div className="absolute inset-0 bg-background/55" />
           <div className="section-shell relative flex h-full flex-col justify-between py-14">
@@ -171,7 +172,11 @@ function Index() {
         </section>
 
         <section className="overflow-hidden border-y border-foreground/20 py-20 md:py-28">
-          <div className="display-type w-max whitespace-nowrap text-[clamp(6rem,20vw,18rem)] text-foreground/10">Radical transparency — Radical transparency —</div>
+          <div className="loop-mask">
+            <div className="loop-track loop-track-slow display-type text-[clamp(6rem,20vw,18rem)] text-foreground/10" aria-label="Radical transparency">
+              {[0, 1].map((group) => <div key={group} aria-hidden={group === 1} className="flex shrink-0"><span className="px-5">Radical transparency — Radical transparency —</span></div>)}
+            </div>
+          </div>
           <div className="section-shell relative -mt-6 grid gap-10 md:-mt-14 md:grid-cols-2">
             <h2 data-reveal className="display-type text-6xl md:text-8xl">The label is the promise.</h2>
             <div data-reveal className="md:pt-10"><p className="text-lg leading-8 text-muted-foreground">Original or master copy — every listing states exactly what you receive, with clear specs and honest pricing.</p><div className="mt-9 grid grid-cols-2 gap-5 border-t border-foreground/20 pt-6 text-[0.62rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Nationwide delivery</span><span>04 / WhatsApp support</span></div></div>
