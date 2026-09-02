@@ -38,16 +38,6 @@ export function useScrollReveal(scope: RefObject<HTMLElement | null>) {
             scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: 0.7 },
           });
         });
-        gsap.utils.toArray<HTMLElement>("[data-campaign]").forEach((section) => {
-          const image = section.querySelector("img");
-          const copy = section.querySelector("h2");
-          if (!image || !copy) return;
-          const timeline = gsap.timeline({
-            scrollTrigger: { trigger: section, start: "top 85%", end: "bottom 20%", scrub: 0.8 },
-          });
-          timeline.fromTo(image, { scale: 1.16 }, { scale: 1.03, ease: "none" }, 0)
-            .fromTo(copy, { yPercent: 35, opacity: 0.25 }, { yPercent: 0, opacity: 1, ease: "none" }, 0);
-        });
       }, scope);
       dispose = () => context.revert();
     });

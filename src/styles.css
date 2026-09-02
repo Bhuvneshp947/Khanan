@@ -165,36 +165,8 @@
 @utility hairline-top { border-top: 1px solid var(--color-border); }
 @utility hairline-bottom { border-bottom: 1px solid var(--color-border); }
 
-@keyframes ticker { to { transform: translate3d(-50%, 0, 0); } }
+@keyframes ticker { to { transform: translateX(-50%); } }
 @utility ticker-track { animation: ticker 24s linear infinite; will-change: transform; }
-
-@utility loop-mask { overflow: hidden; }
-@utility loop-track {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-  animation: ticker 18s linear infinite;
-  will-change: transform;
-}
-@utility loop-track-slow { animation-duration: 34s; }
-
-@keyframes hero-copy-enter {
-  0% { opacity: 0; transform: translate3d(0, 32px, 0); }
-  100% { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-@keyframes hero-visual-enter {
-  0% { opacity: 0; clip-path: inset(0 0 0 100%); transform: scale(1.04); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); transform: scale(1); }
-}
-
-@keyframes hero-progress {
-  0% { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-
-@utility hero-copy-enter { animation: hero-copy-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-@utility hero-visual-enter { animation: hero-visual-enter 900ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 @utility section-shell {
   width: 100%;
@@ -218,5 +190,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .ticker-track, .loop-track, .soft-pulse, .hero-copy-enter, .hero-visual-enter { animation: none; }
+  .ticker-track, .soft-pulse { animation: none; }
 }
