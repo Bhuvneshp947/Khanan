@@ -165,8 +165,15 @@
 @utility hairline-top { border-top: 1px solid var(--color-border); }
 @utility hairline-bottom { border-bottom: 1px solid var(--color-border); }
 
-@keyframes ticker { to { transform: translate3d(-50%, 0, 0); } }
-@utility ticker-track { animation: ticker 26s linear infinite; will-change: transform; }
+@keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+@utility ticker-track { animation: ticker 20s linear infinite; will-change: transform; }
+
+@keyframes strip-enter {
+  from { opacity: 0; transform: translate3d(100%, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@utility service-ticker { animation: strip-enter 800ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 @keyframes hero-copy-enter {
   from { opacity: 0; transform: translateY(28px); }
@@ -201,7 +208,19 @@
 
 @utility soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
 
+@keyframes whatsapp-pulse {
+  0%, 100% { box-shadow: 0 12px 30px oklch(0 0 0 / 35%); }
+  50% { box-shadow: 0 12px 30px oklch(0 0 0 / 55%), 0 0 0 8px oklch(1 0 0 / 8%); }
+}
+
+@utility whatsapp-float { animation: whatsapp-pulse 2.8s ease-in-out infinite; }
+@utility trust-card { transform-style: preserve-3d; }
+
+@media (hover: hover) {
+  .trust-card:hover { transform: translateY(-0.5rem) rotateX(2deg) rotateY(-2deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .ticker-track, .soft-pulse, .hero-copy-enter, .hero-media-enter { animation: none; }
+  .ticker-track, .soft-pulse, .hero-copy-enter, .hero-media-enter, .whatsapp-float, .service-ticker { animation: none; }
 }

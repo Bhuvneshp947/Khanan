@@ -6,9 +6,9 @@ import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 export const Route = createFileRoute("/about")({
   head: () => ({ meta: [
-    { title: "The SYNOVA Story — Built on Trust" },
+     { title: "The KHANAN Story — Built on Trust" },
     { name: "description", content: "Discover how SYNOVA is building transparent, accountable technology commerce in Pakistan." },
-    { property: "og:title", content: "The SYNOVA Story — Built on Trust" },
+     { property: "og:title", content: "The KHANAN Story — Built on Trust" },
     { property: "og:description", content: "Discover how SYNOVA is building transparent, accountable technology commerce in Pakistan." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowRight, Minus, Plus, X } from "lucide-react";
+import { ArrowDown, ArrowRight, Check, MapPin, Minus, Plus, User, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { PageFrame, ServiceTicker, SiteFooter, SiteHeader } from "@/components/storefront-layout";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -21,9 +22,9 @@ import portronicsBudsImage from "@/assets/portronics-twins-32.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SYNOVA — Power Banks, Chargers & Mobile Accessories" },
+      { title: "KHANAN — Power Banks, Chargers & Mobile Accessories" },
       { name: "description", content: "Shop SYNOVA power banks, fast chargers, ear buds and mobile holders with disclosed authenticity and Cash on Delivery across Pakistan." },
-      { property: "og:title", content: "SYNOVA — Power Banks, Chargers & Mobile Accessories" },
+      { property: "og:title", content: "KHANAN — Power Banks, Chargers & Mobile Accessories" },
       { property: "og:description", content: "Shop SYNOVA power banks, fast chargers, ear buds and mobile holders with disclosed authenticity and Cash on Delivery across Pakistan." },
       { property: "og:type", content: "website" },
       { property: "og:image", content: powerHeroAsset.url },
@@ -64,16 +65,20 @@ const heroSlides = [
 const categories = ["All", "Chargers", "Power Bank", "Ear buds", "Mobile Holder"] as const;
 
 const products = [
-  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", was: "Rs. 2,499", image: gr02Asset.url, details: "Secure dashboard and air-vent mounting with quick one-hand adjustment." },
-  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", was: "Rs. 5,999", image: gemanAsset.url, details: "High-capacity portable power with 22.5W fast charging for long days." },
-  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", was: "Rs. 7,999", image: hifastAsset.url, details: "Ultra-capacity backup power with up to 66.5W fast charging." },
-  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", was: "Rs. 2,200", image: jcell103Asset.url, details: "Compact everyday backup power in a travel-ready form." },
-  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", was: "Rs. 2,700", image: jcell133Asset.url, details: "A compact 10,000mAh charging system for dependable daily use." },
-  { name: "Portronics Adapto 66 (2.4A Dual USB Wall Charger)", category: "Chargers", price: "₹299.00", image: portronicsAdaptoImage, brand: "Portronics", details: "Dual USB ports charge two standard devices at once; includes a 1M micro-USB cable." },
-  { name: "Samsung 40W Type A & Type C 2-Port Fast Charger", category: "Chargers", price: "Contact for price", image: samsungChargerImage, brand: "Samsung", details: "Dual fast charging up to 25W on Type-C and 15W on Type-A, with built-in safety protection." },
-  { name: "Noise Buds X2 Truly Wireless Bluetooth Earbuds", category: "Ear buds", price: "₹1,799", image: noiseBudsImage, brand: "Noise", details: "Long battery life, quad microphones for clear calls, and fast charging." },
-  { name: "Portronics Harmonics Twins 32 In-Ear TWS Smart Earbuds with HD Mic", category: "Ear buds", price: "₹772", image: portronicsBudsImage, brand: "Portronics", details: "Bluetooth 5.4, touch controls, HD microphone, and water resistance." },
+  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", amount: 1999, was: "Rs. 2,499", image: gr02Asset.url, details: "Secure dashboard and air-vent mounting with quick one-hand adjustment." },
+  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", amount: 4899, was: "Rs. 5,999", image: gemanAsset.url, details: "High-capacity portable power with 22.5W fast charging for long days." },
+  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", amount: 6499, was: "Rs. 7,999", image: hifastAsset.url, details: "Ultra-capacity backup power with up to 66.5W fast charging." },
+  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", amount: 1699, was: "Rs. 2,200", image: jcell103Asset.url, details: "Compact everyday backup power in a travel-ready form." },
+  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", amount: 2599, was: "Rs. 2,700", image: jcell133Asset.url, details: "A compact 10,000mAh charging system for dependable daily use." },
+  { name: "Portronics Adapto 66 (2.4A Dual USB Wall Charger)", category: "Chargers", price: "₹299.00", amount: 299, image: portronicsAdaptoImage, brand: "Portronics", details: "Dual USB ports charge two standard devices at once; includes a 1M micro-USB cable." },
+  { name: "Samsung 40W Type A & Type C 2-Port Fast Charger", category: "Chargers", price: "Rs. 2,999", amount: 2999, image: samsungChargerImage, brand: "Samsung", details: "Dual fast charging up to 25W on Type-C and 15W on Type-A, with built-in safety protection." },
+  { name: "Noise Buds X2 Truly Wireless Bluetooth Earbuds", category: "Ear buds", price: "₹1,799", amount: 1799, image: noiseBudsImage, brand: "Noise", details: "Long battery life, quad microphones for clear calls, and fast charging." },
+  { name: "Portronics Harmonics Twins 32 In-Ear TWS Smart Earbuds with HD Mic", category: "Ear buds", price: "₹772", amount: 772, image: portronicsBudsImage, brand: "Portronics", details: "Bluetooth 5.4, touch controls, HD microphone, and water resistance." },
 ];
+
+type Product = (typeof products)[number];
+type CartLine = { product: Product; quantity: number };
+type Customer = { name: string; email: string; phone: string; address: string; city: string };
 
 const categoryCards = [
   { name: "Chargers", image: powerHeroAsset.url },
@@ -82,12 +87,27 @@ const categoryCards = [
   { name: "Mobile Holder", image: gr02Asset.url },
 ];
 
+const trustCards = [
+  { title: "100% Genuine", text: "Verified Product", number: "01" },
+  { title: "1 Year", text: "Brand Warranty", number: "02" },
+  { title: "Packaging Video", text: "See Your Product", number: "03" },
+  { title: "Fast Delivery", text: "All Over Pakistan", number: "04" },
+];
+
 function Index() {
   const scope = useRef<HTMLDivElement>(null);
   const [slide, setSlide] = useState(0);
   const [filter, setFilter] = useState<(typeof categories)[number]>("All");
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [cart, setCart] = useState<CartLine[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [orderDone, setOrderDone] = useState(false);
+  const [accountMode, setAccountMode] = useState<"signin" | "signup">("signup");
+  const [customer, setCustomer] = useState<Customer>(() => {
+    if (typeof window === "undefined") return { name: "", email: "", phone: "", address: "", city: "" };
+    try { return JSON.parse(window.localStorage.getItem("synova-customer") || "null") || { name: "", email: "", phone: "", address: "", city: "" }; } catch { return { name: "", email: "", phone: "", address: "", city: "" }; }
+  });
   useScrollReveal(scope);
 
   useEffect(() => {
@@ -97,6 +117,27 @@ function Index() {
 
   const visible = useMemo(() => (filter === "All" ? products : products.filter((product) => product.category === filter)), [filter]);
   const active = heroSlides[slide]!;
+  const cartCount = cart.reduce((total, line) => total + line.quantity, 0);
+  const cartTotal = cart.reduce((total, line) => total + line.product.amount * line.quantity, 0);
+  const addToCart = (product: Product) => {
+    setCart((lines) => {
+      const existing = lines.find((line) => line.product.name === product.name);
+      return existing ? lines.map((line) => line.product.name === product.name ? { ...line, quantity: line.quantity + 1 } : line) : [...lines, { product, quantity: 1 }];
+    });
+    setSelectedProduct(null);
+    setCartOpen(true);
+  };
+  const changeQuantity = (productName: string, amount: number) => setCart((lines) => lines.map((line) => line.product.name === productName ? { ...line, quantity: line.quantity + amount } : line).filter((line) => line.quantity > 0));
+  const beginCheckout = () => { setSelectedProduct(null); setCartOpen(false); setCheckoutOpen(true); setOrderDone(false); };
+  const submitOrder = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    window.localStorage.setItem("synova-customer", JSON.stringify(customer));
+    const orderLines = cart.map(({ product, quantity }) => `${product.name} | Qty: ${quantity} | Price: ${product.price}`).join("\n");
+    const message = `New KHANAN COD Order\n\nCustomer: ${customer.name}\nEmail: ${customer.email}\nDelivery phone: ${customer.phone}\nAddress: ${customer.address}, ${customer.city}\n\nProducts:\n${orderLines}\n\nTotal: Rs. ${cartTotal.toLocaleString()}\nPayment: Cash on Delivery`;
+    void fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to: "bhuvneshp947@gmail.com", message }) }).catch(() => undefined);
+    window.open(`https://wa.me/923299780675?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    setOrderDone(true);
+  };
 
   return (
     <PageFrame>
@@ -130,6 +171,12 @@ function Index() {
 
         <ServiceTicker />
 
+        <section className="section-shell py-12 md:py-16">
+          <div data-stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {trustCards.map((card) => <article key={card.number} className="trust-card group relative overflow-hidden rounded-2xl border border-foreground/15 bg-card p-6 transition-all duration-500 hover:-translate-y-2 hover:border-foreground/60 hover:bg-foreground hover:text-background"><span className="text-[0.6rem] font-bold tracking-[0.2em] opacity-50">{card.number}</span><h2 className="display-type mt-12 text-4xl">{card.title}</h2><p className="mt-3 text-xs uppercase tracking-[0.16em] opacity-60">{card.text}</p><div className="mt-8 h-px w-8 bg-current transition-all duration-500 group-hover:w-full" /></article>)}
+          </div>
+        </section>
+
         <section id="products" className="section-shell py-20 md:py-28">
           <div data-reveal className="flex flex-wrap items-end justify-between gap-6 border-b border-foreground/20 pb-6">
             <div>
@@ -145,12 +192,12 @@ function Index() {
 
           <div data-stagger className="mt-12 grid gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((product, index) => (
-              <article key={product.name} className="group">
+              <article key={product.name} className="group cursor-pointer" onClick={() => setSelectedProduct(product)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setSelectedProduct(product); }} role="button" tabIndex={0}>
                 <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-card">
                   <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.07]" />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   <span className="absolute left-3 top-3 rounded-full bg-background/85 px-3 py-1 text-[0.55rem] font-bold uppercase tracking-[0.16em] backdrop-blur">{product.category}</span>
-                  <Button variant="editorial" size="icon" aria-label={`Add ${product.name} to bag`} onClick={() => { setCartCount((value) => value + 1); setCartOpen(true); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
+                  <Button variant="editorial" size="icon" aria-label={`Add ${product.name} to bag`} onClick={(event) => { event.stopPropagation(); addToCart(product); }} className="absolute bottom-3 right-3 transition-all duration-500 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"><Plus /></Button>
                 </div>
                 {product.brand && <p className="mt-5 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-muted-foreground">{product.brand}</p>}
                 <h3 className={`${product.brand ? "mt-2" : "mt-5"} text-sm font-bold leading-6`}>{product.name}</h3>
@@ -205,15 +252,39 @@ function Index() {
           {cartCount === 0 ? (
             <div><p className="display-type text-5xl">Your bag is quiet.</p><p className="mt-4 text-sm text-muted-foreground">Add something worth carrying.</p></div>
           ) : (
-            <div>
-              <div className="flex gap-4"><img src={gemanAsset.url} alt="Geman GP-37 power bank" className="h-28 w-24 rounded-md object-cover" /><div className="flex flex-1 justify-between"><div><p className="text-sm font-bold">Selected items</p><p className="mt-1 text-xs text-muted-foreground">Cash on Delivery available</p><div className="mt-5 flex items-center gap-3"><Button variant="ghost" size="icon" aria-label="Remove one" onClick={() => setCartCount((value) => Math.max(0, value - 1))}><Minus /></Button><span className="text-sm">{cartCount}</span><Button variant="ghost" size="icon" aria-label="Add one" onClick={() => setCartCount((value) => value + 1)}><Plus /></Button></div></div></div></div>
-              <p className="mt-8 border-t border-foreground/20 pt-5 text-xs text-muted-foreground">Checkout becomes available once a store is connected.</p>
+            <div className="overflow-y-auto">
+              {cart.map(({ product, quantity }) => <div key={product.name} className="flex gap-3 border-b border-foreground/15 py-4 first:pt-0"><img src={product.image} alt={product.name} className="h-20 w-16 rounded-md object-cover" /><div className="min-w-0 flex-1"><p className="text-sm font-bold leading-5">{product.name}</p><p className="mt-1 text-xs text-muted-foreground">{product.price}</p><div className="mt-3 flex items-center gap-3"><Button variant="ghost" size="icon" aria-label={`Remove one ${product.name}`} onClick={() => changeQuantity(product.name, -1)}><Minus /></Button><span className="text-sm">{quantity}</span><Button variant="ghost" size="icon" aria-label={`Add one ${product.name}`} onClick={() => changeQuantity(product.name, 1)}><Plus /></Button></div></div></div>)}
             </div>
           )}
-          <Button variant="editorial" size="editorial" disabled={cartCount === 0} className="w-full">Checkout <ArrowRight /></Button>
+          <div className="border-t border-foreground/20 pt-5"><div className="mb-5 flex items-center justify-between text-sm font-bold"><span>Total</span><span>Rs. {cartTotal.toLocaleString()}</span></div><Button variant="editorial" size="editorial" disabled={cartCount === 0} onClick={beginCheckout} className="w-full">Checkout <ArrowRight /></Button></div>
         </div>
       </div>
       {cartOpen && <button aria-label="Close cart overlay" className="fixed inset-0 z-[75] cursor-default bg-background/70 backdrop-blur-sm" onClick={() => setCartOpen(false)} />}
+
+      {selectedProduct && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-background/80 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-label="Product details">
+          <div className="relative grid w-full max-w-3xl overflow-hidden rounded-2xl border border-foreground/20 bg-card md:grid-cols-2">
+            <button type="button" aria-label="Close product details" onClick={() => setSelectedProduct(null)} className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-background/80 transition-transform hover:rotate-90"><X className="size-4" /></button>
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="h-72 w-full object-cover md:h-full" />
+            <div className="p-7 md:p-10"><p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">{selectedProduct.brand || selectedProduct.category}</p><h2 className="display-type mt-4 text-5xl">{selectedProduct.name}</h2><p className="mt-5 text-sm leading-7 text-muted-foreground">{selectedProduct.details}</p><p className="mt-7 text-2xl font-bold">{selectedProduct.price}</p>{selectedProduct.was && <p className="mt-1 text-xs text-muted-foreground line-through">{selectedProduct.was}</p>}<div className="mt-8 grid gap-3"><Button variant="editorial" size="editorial" onClick={() => addToCart(selectedProduct)}>Add to cart <Plus /></Button><Button variant="editorialOutline" size="editorial" onClick={() => { addToCart(selectedProduct); setCartOpen(false); setCheckoutOpen(true); }}>Buy now <ArrowRight /></Button></div></div>
+          </div>
+        </div>
+      )}
+
+      {checkoutOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-background/85 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-label="Checkout">
+          <div className="relative w-full max-w-2xl rounded-2xl border border-foreground/20 bg-card p-6 md:p-9">
+            <button type="button" aria-label="Close checkout" onClick={() => setCheckoutOpen(false)} className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full transition-transform hover:rotate-90"><X className="size-4" /></button>
+            {orderDone ? <div className="py-12 text-center"><div className="mx-auto flex size-16 items-center justify-center rounded-full bg-foreground text-background"><Check /></div><h2 className="display-type mt-7 text-6xl">Order started.</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">We saved your details and will confirm your order on WhatsApp before dispatch. Our delivery partner will call you on {customer.phone}.</p><Button variant="editorial" size="editorial" className="mt-8" onClick={() => { setCheckoutOpen(false); setCart([]); }}>Done <Check /></Button></div> : <form onSubmit={submitOrder}>
+              <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">Secure checkout</p><h2 className="display-type mt-3 text-6xl">Complete order</h2>
+              <div className="mt-7 flex gap-2 border-b border-foreground/15 pb-3"><button type="button" className={`text-xs font-bold uppercase tracking-[0.14em] ${accountMode === "signup" ? "opacity-100" : "text-muted-foreground"}`} onClick={() => setAccountMode("signup")}>Sign up</button><span className="text-muted-foreground">/</span><button type="button" className={`text-xs font-bold uppercase tracking-[0.14em] ${accountMode === "signin" ? "opacity-100" : "text-muted-foreground"}`} onClick={() => setAccountMode("signin")}>Sign in</button></div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2"><label className="text-xs font-bold uppercase tracking-[0.12em]">Full name<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="Your name" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">Email<input required type="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="you@example.com" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">Delivery phone<input required type="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="03XX XXXXXXX" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">City<input required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="Lahore" /></label><label className="text-xs font-bold uppercase tracking-[0.12em] sm:col-span-2">Complete address<textarea required value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} className="mt-2 min-h-20 w-full resize-none border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="House, street, area" /></label></div>
+              <div className="mt-8"><p className="text-xs font-bold uppercase tracking-[0.12em]">Payment method</p><div className="mt-3 flex items-center gap-3 rounded-xl border border-foreground bg-foreground p-4 text-background"><MapPin className="size-5" /><span><strong className="block text-sm">Cash on delivery (COD)</strong><small className="opacity-70">Pay our delivery partner when your order arrives</small></span></div></div>
+              <div className="mt-8 flex items-center justify-between border-t border-foreground/20 pt-5"><div><p className="text-xs text-muted-foreground">Total to pay</p><p className="text-xl font-bold">Rs. {cartTotal.toLocaleString()}</p></div><Button variant="editorial" size="editorial" type="submit">Place COD order <ArrowRight /></Button></div><p className="mt-4 flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground"><User className="size-3" /> Your address is saved securely on this device for faster checkout.</p>
+            </form>}
+          </div>
+        </div>
+      )}
     </PageFrame>
   );
 }

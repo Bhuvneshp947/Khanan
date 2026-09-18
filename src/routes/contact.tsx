@@ -7,9 +7,9 @@ import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [
-    { title: "Contact SYNOVA — Product & Order Support" },
+     { title: "Contact KHANAN — Product & Order Support" },
     { name: "description", content: "Contact SYNOVA for product advice, orders, warranties, availability and wholesale inquiries across Pakistan." },
-    { property: "og:title", content: "Contact SYNOVA — Product & Order Support" },
+     { property: "og:title", content: "Contact KHANAN — Product & Order Support" },
     { property: "og:description", content: "Contact SYNOVA for product advice, orders, warranties, availability and wholesale inquiries across Pakistan." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -23,8 +23,8 @@ function ContactPage() {
   useScrollReveal(scope);
   const sendMessage = (event: FormEvent) => {
     event.preventDefault();
-    const body = `Hello SYNOVA,\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email || "Not provided"}\n\n${form.message}`;
-    window.open(`https://wa.me/923295480628?text=${encodeURIComponent(body)}`, "_blank", "noopener,noreferrer");
+      const body = `Hello KHANAN,\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email || "Not provided"}\n\n${form.message}`;
+    window.open(`https://wa.me/923299780675?text=${encodeURIComponent(body)}`, "_blank", "noopener,noreferrer");
   };
   const field = (key: keyof typeof form) => ({ value: form[key], onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((current) => ({ ...current, [key]: event.target.value })) });
   return (
