@@ -208,13 +208,12 @@
 
 @utility soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
 
-@keyframes whatsapp-pulse {
-  0%, 100% { box-shadow: 0 12px 30px oklch(0 0 0 / 35%); }
-  50% { box-shadow: 0 12px 30px oklch(0 0 0 / 55%), 0 0 0 8px oklch(1 0 0 / 8%); }
-}
-
-@utility whatsapp-float { animation: whatsapp-pulse 2.8s ease-in-out infinite; }
 @utility trust-card { transform-style: preserve-3d; }
+
+@media (hover: hover) {
+  .cursor-hover { transition: transform 320ms ease, opacity 320ms ease; }
+  .cursor-hover:hover { transform: translateY(-0.35rem); }
+}
 
 @media (hover: hover) {
   .trust-card:hover { transform: translateY(-0.5rem) rotateX(2deg) rotateY(-2deg); }
@@ -222,5 +221,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .ticker-track, .soft-pulse, .hero-copy-enter, .hero-media-enter, .whatsapp-float, .service-ticker { animation: none; }
+  .ticker-track, .soft-pulse, .hero-copy-enter, .hero-media-enter, .service-ticker { animation: none; }
 }

@@ -103,6 +103,8 @@ function Index() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderDone, setOrderDone] = useState(false);
+  const [orderError, setOrderError] = useState("");
+  const [submittingOrder, setSubmittingOrder] = useState(false);
   const [accountMode, setAccountMode] = useState<"signin" | "signup">("signup");
   const [customer, setCustomer] = useState<Customer>(() => {
     if (typeof window === "undefined") return { name: "", email: "", phone: "", address: "", city: "" };
@@ -129,14 +131,22 @@ function Index() {
   };
   const changeQuantity = (productName: string, amount: number) => setCart((lines) => lines.map((line) => line.product.name === productName ? { ...line, quantity: line.quantity + amount } : line).filter((line) => line.quantity > 0));
   const beginCheckout = () => { setSelectedProduct(null); setCartOpen(false); setCheckoutOpen(true); setOrderDone(false); };
-  const submitOrder = (event: FormEvent<HTMLFormElement>) => {
+  const submitOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmittingOrder(true);
+    setOrderError("");
     window.localStorage.setItem("synova-customer", JSON.stringify(customer));
-    const orderLines = cart.map(({ product, quantity }) => `${product.name} | Qty: ${quantity} | Price: ${product.price}`).join("\n");
-    const message = `New KHANAN COD Order\n\nCustomer: ${customer.name}\nEmail: ${customer.email}\nDelivery phone: ${customer.phone}\nAddress: ${customer.address}, ${customer.city}\n\nProducts:\n${orderLines}\n\nTotal: Rs. ${cartTotal.toLocaleString()}\nPayment: Cash on Delivery`;
-    void fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to: "bhuvneshp947@gmail.com", message }) }).catch(() => undefined);
-    window.open(`https://wa.me/923299780675?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    setOrderDone(true);
+    const orderLines = cart.map(({ product, quantity }) => `${product.name} | Qty: ${quantity} | Unit price: ${product.price} | Line total: Rs. ${(product.amount * quantity).toLocaleString()}`).join("\n");
+    const message = `New KHANAN COD Order\n\nCustomer: ${customer.name}\nEmail: ${customer.email}\nDelivery phone: ${customer.phone}\nAddress: ${customer.address}, ${customer.city}\n\nProducts:\n${orderLines}\n\nDelivery: Free\nTotal: Rs. ${cartTotal.toLocaleString()}\nPayment: Cash on Delivery`;
+    try {
+      const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message }) });
+      if (!response.ok) throw new Error("Order email failed");
+      setOrderDone(true);
+    } catch {
+      setOrderError("We could not send your order right now. Please try again.");
+    } finally {
+      setSubmittingOrder(false);
+    }
   };
 
   return (
@@ -192,7 +202,7 @@ function Index() {
 
           <div data-stagger className="mt-12 grid gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((product, index) => (
-              <article key={product.name} className="group cursor-pointer" onClick={() => setSelectedProduct(product)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setSelectedProduct(product); }} role="button" tabIndex={0}>
+              <article key={product.name} className="group cursor-hover cursor-pointer" onClick={() => setSelectedProduct(product)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setSelectedProduct(product); }} role="button" tabIndex={0}>
                 <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-card">
                   <img src={product.image} alt={product.name} width={1024} height={1280} loading="lazy" className="size-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.07]" />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -240,7 +250,7 @@ function Index() {
           </div>
           <div className="section-shell relative -mt-6 grid gap-10 md:-mt-14 md:grid-cols-2">
             <h2 data-reveal className="display-type text-6xl md:text-8xl">The label is the promise.</h2>
-            <div data-reveal className="md:pt-10"><p className="text-lg leading-8 text-muted-foreground">Original or master copy — every listing states exactly what you receive, with clear specs and honest pricing.</p><div className="mt-9 grid grid-cols-2 gap-5 border-t border-foreground/20 pt-6 text-[0.62rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Nationwide delivery</span><span>04 / WhatsApp support</span></div></div>
+            <div data-reveal className="md:pt-10"><p className="text-lg leading-8 text-muted-foreground">Original or master copy — every listing states exactly what you receive, with clear specs and honest pricing.</p><div className="mt-9 grid grid-cols-2 gap-5 border-t border-foreground/20 pt-6 text-[0.62rem] font-bold uppercase tracking-[0.16em]"><span>01 / Checked by hand</span><span>02 / Honest grading</span><span>03 / Nationwide delivery</span><span>04 / Email order updates</span></div></div>
           </div>
         </section>
       </main>
@@ -275,12 +285,13 @@ function Index() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-background/85 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-label="Checkout">
           <div className="relative w-full max-w-2xl rounded-2xl border border-foreground/20 bg-card p-6 md:p-9">
             <button type="button" aria-label="Close checkout" onClick={() => setCheckoutOpen(false)} className="absolute right-4 top-4 flex size-9 items-center justify-center rounded-full transition-transform hover:rotate-90"><X className="size-4" /></button>
-            {orderDone ? <div className="py-12 text-center"><div className="mx-auto flex size-16 items-center justify-center rounded-full bg-foreground text-background"><Check /></div><h2 className="display-type mt-7 text-6xl">Order started.</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">We saved your details and will confirm your order on WhatsApp before dispatch. Our delivery partner will call you on {customer.phone}.</p><Button variant="editorial" size="editorial" className="mt-8" onClick={() => { setCheckoutOpen(false); setCart([]); }}>Done <Check /></Button></div> : <form onSubmit={submitOrder}>
+            {orderDone ? <div className="py-12 text-center"><div className="mx-auto flex size-16 items-center justify-center rounded-full bg-foreground text-background"><Check /></div><h2 className="display-type mt-7 text-6xl">Order received.</h2><p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground">Your order details were sent to our team by email. Our delivery partner will call you on {customer.phone}.</p><Button variant="editorial" size="editorial" className="mt-8" onClick={() => { setCheckoutOpen(false); setCart([]); }}>Done <Check /></Button></div> : <form onSubmit={submitOrder}>
               <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">Secure checkout</p><h2 className="display-type mt-3 text-6xl">Complete order</h2>
               <div className="mt-7 flex gap-2 border-b border-foreground/15 pb-3"><button type="button" className={`text-xs font-bold uppercase tracking-[0.14em] ${accountMode === "signup" ? "opacity-100" : "text-muted-foreground"}`} onClick={() => setAccountMode("signup")}>Sign up</button><span className="text-muted-foreground">/</span><button type="button" className={`text-xs font-bold uppercase tracking-[0.14em] ${accountMode === "signin" ? "opacity-100" : "text-muted-foreground"}`} onClick={() => setAccountMode("signin")}>Sign in</button></div>
               <div className="mt-6 grid gap-4 sm:grid-cols-2"><label className="text-xs font-bold uppercase tracking-[0.12em]">Full name<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="Your name" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">Email<input required type="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="you@example.com" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">Delivery phone<input required type="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="03XX XXXXXXX" /></label><label className="text-xs font-bold uppercase tracking-[0.12em]">City<input required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="mt-2 w-full border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="Lahore" /></label><label className="text-xs font-bold uppercase tracking-[0.12em] sm:col-span-2">Complete address<textarea required value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} className="mt-2 min-h-20 w-full resize-none border-b border-foreground/25 bg-transparent px-0 py-3 text-sm font-normal normal-case tracking-normal outline-none focus:border-foreground" placeholder="House, street, area" /></label></div>
+              <div className="mt-8"><p className="text-xs font-bold uppercase tracking-[0.12em]">Order summary</p><div className="mt-3 divide-y divide-foreground/15 border-y border-foreground/15">{cart.map(({ product, quantity }) => <div key={product.name} className="flex items-start justify-between gap-4 py-3 text-sm"><span className="max-w-[70%] leading-5">{product.name} <span className="text-muted-foreground">x{quantity}</span></span><span className="shrink-0 font-bold">Rs. {(product.amount * quantity).toLocaleString()}</span></div>)}<div className="flex items-center justify-between py-3 text-xs uppercase tracking-[0.12em] text-muted-foreground"><span>Delivery</span><span>Free</span></div><div className="flex items-center justify-between py-4 font-bold"><span>Total</span><span>Rs. {cartTotal.toLocaleString()}</span></div></div></div>
               <div className="mt-8"><p className="text-xs font-bold uppercase tracking-[0.12em]">Payment method</p><div className="mt-3 flex items-center gap-3 rounded-xl border border-foreground bg-foreground p-4 text-background"><MapPin className="size-5" /><span><strong className="block text-sm">Cash on delivery (COD)</strong><small className="opacity-70">Pay our delivery partner when your order arrives</small></span></div></div>
-              <div className="mt-8 flex items-center justify-between border-t border-foreground/20 pt-5"><div><p className="text-xs text-muted-foreground">Total to pay</p><p className="text-xl font-bold">Rs. {cartTotal.toLocaleString()}</p></div><Button variant="editorial" size="editorial" type="submit">Place COD order <ArrowRight /></Button></div><p className="mt-4 flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground"><User className="size-3" /> Your address is saved securely on this device for faster checkout.</p>
+              {orderError && <p role="alert" className="mt-5 text-sm text-red-400">{orderError}</p>}<div className="mt-8 flex items-center justify-between border-t border-foreground/20 pt-5"><div><p className="text-xs text-muted-foreground">Total to pay</p><p className="text-xl font-bold">Rs. {cartTotal.toLocaleString()}</p></div><Button variant="editorial" size="editorial" type="submit" disabled={submittingOrder}>{submittingOrder ? "Sending..." : "Order now"} <ArrowRight /></Button></div><p className="mt-4 flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.12em] text-muted-foreground"><User className="size-3" /> Your address is saved securely on this device for faster checkout.</p>
             </form>}
           </div>
         </div>

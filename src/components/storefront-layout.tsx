@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, CreditCard, Menu, MessageCircle, PackageCheck, ShieldCheck, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, CreditCard, Menu, PackageCheck, ShieldCheck, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import logoWordmark from "@/assets/2.png";
@@ -7,7 +7,7 @@ import logoWordmark from "@/assets/2.png";
 const tickerItems = [
   "Delivering to major cities across Pakistan",
   "Cash on Delivery available nationwide",
-  "Order confirmed on WhatsApp before dispatch",
+  "Order updates sent by email",
   "7 Day Easy Replacement Guarantee",
 ];
 
@@ -73,7 +73,7 @@ export function SiteFooter() {
         <div><img src={logoWordmark} alt="KHANAN" className="h-16 w-auto md:h-20" /><p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">Premium mobile accessories built around radical transparency. We explicitly disclose product grade and authenticity details.</p></div>
         <div><p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-muted-foreground">Explore</p><div className="space-y-2 text-sm"><Link to="/" hash="products" className="block transition-opacity duration-300 hover:opacity-50">All Products</Link><Link to="/about" className="block transition-opacity duration-300 hover:opacity-50">About Us</Link><Link to="/contact" className="block transition-opacity duration-300 hover:opacity-50">Contact Us</Link></div></div>
         <div><p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-muted-foreground">Customer care</p><div className="space-y-2 text-sm text-muted-foreground"><p>Privacy Policy</p><p>Terms & Conditions</p><p>Shipping Policy</p><p>Returns & Refunds</p><p>Warranty Policy</p></div></div>
-        <div><p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.18em]">Stay updated</p><p className="mb-6 text-sm leading-6 text-muted-foreground">Subscribe to get special offers, free giveaways, and product release updates.</p>{subscribed ? <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]"><CheckCircle2 className="size-4" /> Subscribed</p> : <form onSubmit={(event) => { event.preventDefault(); setSubscribed(true); }} className="flex border-b border-foreground/40"><input required type="email" aria-label="Email address" placeholder="Enter your email" className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground" /><Button type="submit" variant="ghost" size="icon" aria-label="Subscribe"><ArrowRight /></Button></form>}<div className="mt-8 text-xs leading-5"><p className="font-bold uppercase tracking-[0.12em]">Direct support</p><a href="https://wa.me/923299780675" target="_blank" rel="noreferrer" className="mt-2 block text-muted-foreground hover:text-foreground">WhatsApp: +92 329 9780675</a><a href="mailto:synova.com.pk@gmail.com" className="block text-muted-foreground hover:text-foreground">synova.com.pk@gmail.com</a></div></div>
+        <div><p className="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.18em]">Stay updated</p><p className="mb-6 text-sm leading-6 text-muted-foreground">Subscribe to get special offers, free giveaways, and product release updates.</p>{subscribed ? <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]"><CheckCircle2 className="size-4" /> Subscribed</p> : <form onSubmit={(event) => { event.preventDefault(); setSubscribed(true); }} className="flex border-b border-foreground/40"><input required type="email" aria-label="Email address" placeholder="Enter your email" className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground" /><Button type="submit" variant="ghost" size="icon" aria-label="Subscribe"><ArrowRight /></Button></form>}<div className="mt-8 text-xs leading-5"><p className="font-bold uppercase tracking-[0.12em]">Order support</p><a href="mailto:bhuvneshp947@gmail.com" className="mt-2 block text-muted-foreground hover:text-foreground">bhuvneshp947@gmail.com</a></div></div>
       </div>
       <div className="section-shell flex flex-col gap-2 border-t border-foreground/20 py-5 text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground md:flex-row md:justify-between"><span>© 2026 KHANAN. All rights reserved.</span><span>Built on transparency. Designed for trust.</span></div>
     </footer>
@@ -81,5 +81,5 @@ export function SiteFooter() {
 }
 
 export function PageFrame({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`min-h-screen bg-background text-foreground ${className}`}>{children}<a href="https://wa.me/923299780675" target="_blank" rel="noreferrer" aria-label="Chat with SYNOVA on WhatsApp" className="whatsapp-float fixed bottom-5 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-black text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px_rgba(255,255,255,0.7)]"><MessageCircle className="size-6" /></a></div>;
+  return <div className={`min-h-screen bg-background text-foreground ${className}`}>{children}</div>;
 }
