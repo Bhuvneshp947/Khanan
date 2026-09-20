@@ -4,11 +4,14 @@ export const Route = createFileRoute("/api/orders")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { message } = (await request.json()) as { message?: string };
+        const { message, subject } = (await request.json()) as { message?: string; subject?: string };
         const apiKey = typeof process !== "undefined" ? process.env.RESEND_API_KEY : undefined;
 
-        if (!apiKey || !message) {
-          return Response.json({ ok: false, error: "Order email service is not configured." }, { status: 503 });
+        if (!message) return Response.json({ ok: false, error: "Message is required." }, { status: 400 });
+
+        if (!apiKey) {
+          const mailto = `mailto:novadinnovator@gmail.com?subject=${encodeURIComponent(subject || "New KHANAN message")}&body=${encodeURIComponent(message)}`;
+          return Response.json({ ok: true, mailto, mode: "mailto" });
         }
 
         const response = await fetch("https://api.resend.com/emails", {
@@ -16,8 +19,8 @@ export const Route = createFileRoute("/api/orders")({
           headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from: process.env.ORDER_EMAIL_FROM || "KHANAN Orders <onboarding@resend.dev>",
-            to: ["bhuvneshp947@gmail.com"],
-            subject: "New KHANAN COD order",
+            to: ["novadinnovator@gmail.com"],
+            subject: subject || "New KHANAN message",
             text: message,
           }),
         });

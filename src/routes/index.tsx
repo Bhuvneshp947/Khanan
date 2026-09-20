@@ -5,19 +5,19 @@ import { type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { PageFrame, ServiceTicker, SiteFooter, SiteHeader } from "@/components/storefront-layout";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import heroAsset from "@/assets/synova-hero.jpg.asset.json";
-import powerHeroAsset from "@/assets/power-hero.jpg.asset.json";
-import campaignAsset from "@/assets/campaign.jpg.asset.json";
-import headphonesAsset from "@/assets/headphones.jpg.asset.json";
-import gr02Asset from "@/assets/gr02-holder.jpg.asset.json";
-import gemanAsset from "@/assets/geman-powerbank.jpg.asset.json";
-import hifastAsset from "@/assets/hifast-powerbank.jpg.asset.json";
-import jcell103Asset from "@/assets/jcell-103.jpg.asset.json";
-import jcell133Asset from "@/assets/jcell-133.jpg.asset.json";
 import portronicsAdaptoImage from "@/assets/portronics-adapto-66.jpg";
 import samsungChargerImage from "@/assets/samsung-40w-charger.jpg";
 import noiseBudsImage from "@/assets/noise-buds-x2.jpg";
 import portronicsBudsImage from "@/assets/portronics-twins-32.jpg";
+import localHeroImage from "@/assets/synova-hero.jpg";
+import localPowerHeroImage from "@/assets/power-hero.jpg";
+import localCampaignImage from "@/assets/campaign.jpg";
+import localHeadphonesImage from "@/assets/headphones.jpg";
+import localGr02Image from "@/assets/gr02-holder.jpg";
+import localGemanImage from "@/assets/geman-powerbank.jpg";
+import localHifastImage from "@/assets/hifast-powerbank.jpg";
+import localJcell103Image from "@/assets/jcell-103.jpg";
+import localJcell133Image from "@/assets/jcell-133.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,9 +27,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "KHANAN — Power Banks, Chargers & Mobile Accessories" },
       { property: "og:description", content: "Shop SYNOVA power banks, fast chargers, ear buds and mobile holders with disclosed authenticity and Cash on Delivery across Pakistan." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: powerHeroAsset.url },
+      { property: "og:image", content: localPowerHeroImage },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: powerHeroAsset.url },
+      { name: "twitter:image", content: localPowerHeroImage },
     ],
   }),
   component: Index,
@@ -41,7 +41,7 @@ const heroSlides = [
     title: ["Maximum output.", "Zero thermal", "throttling."],
     text: "Compact GaN fast chargers built with intelligent temperature control for laptops, tablets, and phones.",
     cta: "Shop Fast Chargers",
-    image: powerHeroAsset.url,
+    image: localPowerHeroImage,
     alt: "Compact fast charger with braided cable on a dark surface",
   },
   {
@@ -49,7 +49,7 @@ const heroSlides = [
     title: ["Engineered for", "clean desks and", "heavy workloads."],
     text: "Precision-built mounts and high-capacity power banks rated for daily travel and long shifts.",
     cta: "Explore Desktop Gear",
-    image: heroAsset.url,
+    image: localHeroImage,
     alt: "Editorial monochrome shot of premium mobile accessories",
   },
   {
@@ -65,11 +65,11 @@ const heroSlides = [
 const categories = ["All", "Chargers", "Power Bank", "Ear buds", "Mobile Holder"] as const;
 
 const products = [
-  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", amount: 1999, was: "Rs. 2,499", image: gr02Asset.url, details: "Secure dashboard and air-vent mounting with quick one-hand adjustment." },
-  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", amount: 4899, was: "Rs. 5,999", image: gemanAsset.url, details: "High-capacity portable power with 22.5W fast charging for long days." },
-  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", amount: 6499, was: "Rs. 7,999", image: hifastAsset.url, details: "Ultra-capacity backup power with up to 66.5W fast charging." },
-  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", amount: 1699, was: "Rs. 2,200", image: jcell103Asset.url, details: "Compact everyday backup power in a travel-ready form." },
-  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", amount: 2599, was: "Rs. 2,700", image: jcell133Asset.url, details: "A compact 10,000mAh charging system for dependable daily use." },
+  { name: "GR-02 (2-in-1 Semi-Automatic Dashboard & Air Vent Mobile Holder)", category: "Mobile Holder", price: "Rs. 1,999", amount: 1999, was: "Rs. 2,499", image: localGr02Image, details: "Secure dashboard and air-vent mounting with quick one-hand adjustment." },
+  { name: "Geman GP-37 30000mAh 22.5W Supper Fast Charging Power Bank", category: "Power Bank", price: "Rs. 4,899", amount: 4899, was: "Rs. 5,999", image: localGemanImage, details: "High-capacity portable power with 22.5W fast charging for long days." },
+  { name: "HI-FAST HP-27 50,000mAh Ultra-Capacity Power Bank (66.5W Fast Charge)", category: "Power Bank", price: "Rs. 6,499", amount: 6499, was: "Rs. 7,999", image: localHifastImage, details: "Ultra-capacity backup power with up to 66.5W fast charging." },
+  { name: "J-Cell J-103 10,000mAh Portable Power Bank", category: "Power Bank", price: "Rs. 1,699", amount: 1699, was: "Rs. 2,200", image: localJcell103Image, details: "Compact everyday backup power in a travel-ready form." },
+  { name: "J-Cell J-133 10,000mAh Power System Specifications", category: "Power Bank", price: "Rs. 2,599", amount: 2599, was: "Rs. 2,700", image: localJcell133Image, details: "A compact 10,000mAh charging system for dependable daily use." },
   { name: "Portronics Adapto 66 (2.4A Dual USB Wall Charger)", category: "Chargers", price: "₹299.00", amount: 299, image: portronicsAdaptoImage, brand: "Portronics", details: "Dual USB ports charge two standard devices at once; includes a 1M micro-USB cable." },
   { name: "Samsung 40W Type A & Type C 2-Port Fast Charger", category: "Chargers", price: "Rs. 2,999", amount: 2999, image: samsungChargerImage, brand: "Samsung", details: "Dual fast charging up to 25W on Type-C and 15W on Type-A, with built-in safety protection." },
   { name: "Noise Buds X2 Truly Wireless Bluetooth Earbuds", category: "Ear buds", price: "₹1,799", amount: 1799, image: noiseBudsImage, brand: "Noise", details: "Long battery life, quad microphones for clear calls, and fast charging." },
@@ -81,10 +81,10 @@ type CartLine = { product: Product; quantity: number };
 type Customer = { name: string; email: string; phone: string; address: string; city: string };
 
 const categoryCards = [
-  { name: "Chargers", image: powerHeroAsset.url },
-  { name: "Power Bank", image: gemanAsset.url },
-  { name: "Ear buds", image: headphonesAsset.url },
-  { name: "Mobile Holder", image: gr02Asset.url },
+  { name: "Chargers", image: localPowerHeroImage },
+  { name: "Power Bank", image: localGemanImage },
+  { name: "Ear buds", image: localHeadphonesImage },
+  { name: "Mobile Holder", image: localGr02Image },
 ];
 
 const trustCards = [
@@ -139,8 +139,10 @@ function Index() {
     const orderLines = cart.map(({ product, quantity }) => `${product.name} | Qty: ${quantity} | Unit price: ${product.price} | Line total: Rs. ${(product.amount * quantity).toLocaleString()}`).join("\n");
     const message = `New KHANAN COD Order\n\nCustomer: ${customer.name}\nEmail: ${customer.email}\nDelivery phone: ${customer.phone}\nAddress: ${customer.address}, ${customer.city}\n\nProducts:\n${orderLines}\n\nDelivery: Free\nTotal: Rs. ${cartTotal.toLocaleString()}\nPayment: Cash on Delivery`;
     try {
-      const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message }) });
-      if (!response.ok) throw new Error("Order email failed");
+      const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message, subject: "New KHANAN COD order" }) });
+      const result = await response.json() as { ok?: boolean; mailto?: string };
+      if (!response.ok || !result.ok) throw new Error("Order email failed");
+      if (result.mailto) window.location.href = result.mailto;
       setOrderDone(true);
     } catch {
       setOrderError("We could not send your order right now. Please try again.");
@@ -219,7 +221,7 @@ function Index() {
         </section>
 
         <section className="relative h-[80svh] min-h-[520px] overflow-hidden">
-          <img data-parallax src={campaignAsset.url} alt="SYNOVA night campaign" width={1536} height={1024} loading="lazy" className="absolute -inset-y-[10%] h-[120%] w-full object-cover grayscale" />
+          <img data-parallax src={localCampaignImage} alt="SYNOVA night campaign" width={1536} height={1024} loading="lazy" className="absolute -inset-y-[10%] h-[120%] w-full object-cover grayscale" />
           <div className="absolute inset-0 bg-background/55" />
           <div className="section-shell relative flex h-full flex-col justify-between py-14">
             <p data-reveal className="text-[0.62rem] font-bold uppercase tracking-[0.22em]">Campaign 001 / Power, disclosed</p>
